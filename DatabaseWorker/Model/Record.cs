@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseWorker.Model
 {
-    internal class Record
+    public class Record
     {
         public Record(App app, User user, Comment comment)
         {

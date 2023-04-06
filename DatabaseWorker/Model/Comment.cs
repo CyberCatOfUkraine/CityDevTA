@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseWorker.Model
 {
-    internal class Comment
+    public class Comment
     {
         public Comment(string text, DateTime timeStamp)
         {

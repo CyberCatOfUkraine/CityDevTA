@@ -12,7 +12,8 @@ namespace DatabaseWorker.ReaderProcessor
     {
         public App Process(DbDataReader reader)
         {
-            throw new NotImplementedException();
+            (int id, string name) = (int.Parse(reader[0].ToString()!), reader[1].ToString()!);
+            return new App(name) { Id = id };
         }
     }
 }

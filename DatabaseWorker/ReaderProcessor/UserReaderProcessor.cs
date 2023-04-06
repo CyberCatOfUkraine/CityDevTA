@@ -12,8 +12,8 @@ namespace DatabaseWorker.ReaderProcessor
     {
         public User Process(DbDataReader reader)
         {
-            var test = (reader[0] is DBNull ? -1 : reader[0], reader[1]);
-            return new User(test.Item2.ToString()) { Id = int.Parse(test.Item1.ToString()) };
+            (int id, string name) = (int.Parse(reader[0].ToString()!), reader[1].ToString()!);
+            return new User(name) { Id = id };
         }
     }
 }
