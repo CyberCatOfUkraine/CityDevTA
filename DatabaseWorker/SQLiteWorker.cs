@@ -19,7 +19,10 @@
             return _SQLiteWorker;
         }
 
-        private const string ConnectionString = "Data Source=database.db;Version=3;";
+        private const string DbName = "database.db";
+        private const string ConnectionString = $"Data Source={DbName};Version=3;";
+
+        public static string GetDbFileName => DbName;
 
         internal void SendQuery(string query)
         {
