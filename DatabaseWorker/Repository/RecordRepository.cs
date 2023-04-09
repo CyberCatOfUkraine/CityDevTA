@@ -23,7 +23,7 @@ namespace DatabaseWorker.Repository
                 int count = int.Parse(reader[0].ToString()!);
                 return count;
             };
-            int count = SQLiteWorker.GetInstance().GetList(SQLiteTemplate.GetRowsCountQuery(nameof(Record)), f).First();
+            int count = SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetRowsCountQuery(nameof(Record)), f);
 
             return count;
         }
@@ -47,7 +47,7 @@ namespace DatabaseWorker.Repository
 
         public bool Exists(int id)
         {
-            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Record), id)).HasRows;
+            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Record), id), (DbDataReader reader) => { return reader.HasRows; });
         }
 
         public IEnumerable<Record> GetAll()
@@ -88,7 +88,7 @@ namespace DatabaseWorker.Repository
                 return record;
             };
             var records = SQLiteWorker.GetInstance().GetList(SQLiteTemplate.SelectAllFromQuery(nameof(Record)), f);
-            return f(SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Record), id)));
+            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Record), id), f);
         }
 
         public void Update(Record entity)

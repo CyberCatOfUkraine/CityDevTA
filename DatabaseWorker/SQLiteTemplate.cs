@@ -21,16 +21,16 @@ namespace DatabaseWorker
 
         #region Створення таблиць якщо вони не були створені
 
-        public static string CreateAppTableTemplate = $"CREATE TABLE IF NOT EXIST {nameof(App)} ({nameof(App.Name)} TEXT NOT NULL)";
+        public static string CreateAppTableTemplate = $"CREATE TABLE IF NOT EXISTS {nameof(App)} ({nameof(App.Name)} TEXT NOT NULL)";
         public static string CreateCommentTableQuery = $"CREATE TABLE IF NOT EXISTS {nameof(Comment)} ({nameof(Comment.Text)} TEXT NOT NULL, {nameof(Comment.TimeStamp)} TEXT NOT NULL)";
         public static string CreateUserTableQuery = $"CREATE TABLE IF NOT EXISTS {nameof(User)} ({nameof(User.Name)} TEXT NOT NULL)";
         public static string CreateRecordTableQuery = $"CREATE TABLE IF NOT EXISTS {nameof(Record)} ( {nameof(Record.App) + "Id"} INTEGER NOT NULL, {nameof(Record.User) + "Id"} INTEGER NOT NULL, {nameof(Record.Comment) + "Id"} INTEGER NOT NULL )";
 
         #endregion Створення таблиць якщо вони не були створені
 
-        public static string SelectAllFromQuery(string tableName) => $"SELECT * FROM {tableName}";
+        public static string SelectAllFromQuery(string tableName) => $"SELECT ROWID,* FROM {tableName}";
 
-        public static string GetByIdQuery(string tableName, int id) => $"SELECT * FROM {tableName} WHERE ROWID='{id}'";
+        public static string GetByIdQuery(string tableName, int id) => $"SELECT ROWID,* FROM {tableName} WHERE ROWID='{id}'";
 
         public static string RemoveByID(string tableName, int id) => $"DELETE FROM {tableName} WHERE ROWID = '{id}'";
 
@@ -48,7 +48,7 @@ namespace DatabaseWorker
 
         #region Додавання сутностей
 
-        public static string InsertAppQuery(App app) => $"INSERT INTO {nameof(App)} ({nameof(App.Name)}) VALUES ('{app.Name}'))";
+        public static string InsertAppQuery(App app) => $"INSERT INTO {nameof(App)} ({nameof(App.Name)}) VALUES ('{app.Name}')";
 
         public static string InsertCommentQuery(Comment comment) => $"INSERT INTO {nameof(Comment)} ({nameof(Comment.Text)}, {nameof(Comment.TimeStamp)}) VALUES ('{comment.Text}', '{comment.TimeStamp.ToString(CultureInfo.InvariantCulture)}')";
 

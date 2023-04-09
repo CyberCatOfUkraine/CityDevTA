@@ -23,7 +23,7 @@ namespace DatabaseWorker.Repository
                 int count = int.Parse(reader[0].ToString()!);
                 return count;
             };
-            int count = SQLiteWorker.GetInstance().GetList(SQLiteTemplate.GetRowsCountQuery(nameof(App)), f).First();
+            int count = SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetRowsCountQuery(nameof(App)), f);
 
             return count;
         }
@@ -35,7 +35,7 @@ namespace DatabaseWorker.Repository
 
         public bool Exists(int id)
         {
-            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(App), id)).HasRows;
+            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(App), id), (DbDataReader dataReader) => { return dataReader.HasRows; });
         }
 
         public IEnumerable<App> GetAll()
@@ -55,7 +55,7 @@ namespace DatabaseWorker.Repository
             {
                 return new AppReaderProcessor().Process(reader);
             };
-            return f(SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(App), id)));
+            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(App), id), f);
         }
 
         public void Update(App entity)

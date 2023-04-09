@@ -23,7 +23,7 @@ namespace DatabaseWorker.Repository
                 int count = int.Parse(reader[0].ToString()!);
                 return count;
             };
-            int count = SQLiteWorker.GetInstance().GetList(SQLiteTemplate.GetRowsCountQuery(nameof(Comment)), f).First();
+            int count = SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetRowsCountQuery(nameof(Comment)), f);
 
             return count;
         }
@@ -35,7 +35,7 @@ namespace DatabaseWorker.Repository
 
         public bool Exists(int id)
         {
-            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Comment), id)).HasRows;
+            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Comment), id), (DbDataReader reader) => { return reader.HasRows; });
         }
 
         public IEnumerable<Comment> GetAll()
@@ -55,7 +55,7 @@ namespace DatabaseWorker.Repository
             {
                 return new CommentReaderProcessor().Process(reader);
             };
-            return f(SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Comment), id)));
+            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Comment), id), f);
         }
 
         public void Update(Comment entity)

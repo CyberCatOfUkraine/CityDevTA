@@ -2,9 +2,11 @@
 {
     using DatabaseWorker.Model;
     using DatabaseWorker.ReaderProcessor;
+    using System.Data;
     using System.Data.Common;
     using System.Data.SQLite;
     using System.Linq;
+    using System.Reflection.PortableExecutable;
 
     internal class SQLiteWorker
     {
@@ -51,7 +53,7 @@
                         list.Add(item);
                     }
                 };
-                d.Invoke();
+                d.Invoke().Wait();
             }
             catch (AggregateException e)
             {
@@ -113,44 +115,14 @@
             }
         }
 
-        public async Task<DbDataReader> GetDbDataReaderAsync(string query)
+        internal T GetDbDataReader<T>(string query, Func<DbDataReader, T> func)
         {
-            using var sqliteConnection = new SQLiteConnection(ConnectionString);
-
-            await sqliteConnection.OpenAsync();
-            using var transaction = sqliteConnection.BeginTransaction();
-            bool cancelationNeed = true;
-
-            try
+            var items = GetList(query, func);
+            if (items.Count > 0)
             {
-                using var command = sqliteConnection.CreateCommand();
-                command.Transaction = transaction;
-                command.CommandText = query;
-
-                var result = await command.ExecuteReaderAsync();
-
-                transaction.Commit();
-                cancelationNeed = false;
-
-                return result;
+                return items.First();
             }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                if (cancelationNeed)
-                {
-                    transaction.Rollback();
-                }
-            }
-        }
-
-        internal DbDataReader GetDbDataReader(string query)
-        {
-            return GetDbDataReaderAsync(query).Result;
+            return default(T);
         }
     }
 }
