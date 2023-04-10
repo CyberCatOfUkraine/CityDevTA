@@ -1,0 +1,44 @@
+﻿<Window x:Class="Project_Sentinel.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Project_Sentinel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="900"
+
+      WindowStyle="None" AllowsTransparency="True"
+        Background="#f8f8f2">
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation From="1" To="0" Duration="0:0:0.0"
+                                     Storyboard.TargetProperty="Opacity" />
+                    <ColorAnimation From="#f8f8f2" To="#00000000" Duration="0:0:0.0" Storyboard.TargetProperty="(Window.Background).(SolidColorBrush.Color)" />
+                    <DoubleAnimation From="0" To="1" Duration="0:0:1.0"
+                                     Storyboard.TargetProperty="Opacity" />
+                    <ColorAnimation From="#00000000" To="#f8f8f2" Duration="0:0:1.0" Storyboard.TargetProperty="(Window.Background).(SolidColorBrush.Color)" />
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid MinHeight="45">
+            <Rectangle Fill="#f8f8f2" Height="30" />
+            <DockPanel LastChildFill="False" Margin="5,0">
+                <Button x:Name="CloseButton" Content="X" FontFamily="Courier New" FontSize="16" Foreground="#44475a" Background="#f8f8f2" BorderBrush="#44475a" BorderThickness="1.5" FontWeight="UltraBold" DockPanel.Dock="Right" Width="35" Height="25" Margin="0,2,10,2"  Click="CloseWindow" />
+                <Button x:Name="MaximizeButton" Content="[ ]" FontFamily="Courier New" FontSize="14" Foreground="#44475a" Background="#f8f8f2" BorderBrush="#44475a" BorderThickness="1.5" FontWeight="UltraBold" DockPanel.Dock="Right" Width="35" Height="25" Margin="0,2,10,2" Click="MaximizeWindow" />
+                <Button x:Name="MinimizeButton" Content="__" FontFamily="Courier New" FontSize="16" Foreground="#44475a" Background="#f8f8f2" BorderBrush="#44475a" BorderThickness="1.5" FontWeight="UltraBold"  DockPanel.Dock="Right" Width="35" Height="25" Margin="0,2,10,2" Click="MinimizeWindow" />
+                <TextBlock Text="Вартовий v1.0" FontSize="20" FontStyle="Italic" Foreground="#44475a" Margin="5,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </DockPanel>
+            <Grid Background="#44475a" Height="0.5" VerticalAlignment="Bottom" />
+        </Grid>
+        <Grid Grid.Row="1">
+        </Grid>
+    </Grid>
+</Window>
