@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Project_Sentinel"
+        xmlns:local="clr-namespace:Project_Sentinel.View"
+        xmlns:windowControlBtn="clr-namespace:Project_Sentinel.UICustomItem"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="900"
-
-      WindowStyle="None" AllowsTransparency="True"
-        Background="#f8f8f2">
+        WindowStyle="None" AllowsTransparency="True"
+        Background="#f8f8f2" ResizeMode="CanResizeWithGrip" MouseLeave="Window_MouseLeave" WindowStartupLocation="CenterScreen">
     <Window.Triggers>
         <EventTrigger RoutedEvent="Loaded">
             <BeginStoryboard>
@@ -28,12 +28,23 @@
             <RowDefinition Height="45" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid MinHeight="45">
+        <Grid MinHeight="45" Name="WindowControlPanelGrid" MouseLeftButtonDown="WindowControlPanelGrid_MouseLeftButtonDown" MouseMove="WindowControlPanelGrid_MouseMove" MouseLeftButtonUp="WindowControlPanelGrid_MouseLeftButtonUp" MouseLeave="WindowControlPanelGrid_MouseLeave">
             <Rectangle Fill="#f8f8f2" Height="30" />
             <DockPanel LastChildFill="False" Margin="5,0">
-                <Button x:Name="CloseButton" Content="X" FontFamily="Courier New" FontSize="16" Foreground="#44475a" Background="#f8f8f2" BorderBrush="#44475a" BorderThickness="1.5" FontWeight="UltraBold" DockPanel.Dock="Right" Width="35" Height="25" Margin="0,2,10,2"  Click="CloseWindow" />
-                <Button x:Name="MaximizeButton" Content="[ ]" FontFamily="Courier New" FontSize="14" Foreground="#44475a" Background="#f8f8f2" BorderBrush="#44475a" BorderThickness="1.5" FontWeight="UltraBold" DockPanel.Dock="Right" Width="35" Height="25" Margin="0,2,10,2" Click="MaximizeWindow" />
-                <Button x:Name="MinimizeButton" Content="__" FontFamily="Courier New" FontSize="16" Foreground="#44475a" Background="#f8f8f2" BorderBrush="#44475a" BorderThickness="1.5" FontWeight="UltraBold"  DockPanel.Dock="Right" Width="35" Height="25" Margin="0,2,10,2" Click="MinimizeWindow" />
+                <DockPanel.Resources>
+                    <Style TargetType="Button" x:Key="BtnStyle">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#f8f8f2" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Background" Value="#44475a" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Resources>
+                <windowControlBtn:WindowControlButton x:Name="CloseBtn" Margin="0,2,10,2" DockPanel.Dock="Right" Text="X" Width="35" Height="25"  ButtonAction="{x:Static local:MainWindow.CloseWindowCommand}" />
+                <windowControlBtn:WindowControlButton x:Name="MinimizeBtn" Margin="0,2,10,2" DockPanel.Dock="Right" Text="_" Width="35" Height="25" ButtonAction="{x:Static local:MainWindow.MinimizeWindowCommand}" />
                 <TextBlock Text="Вартовий v1.0" FontSize="20" FontStyle="Italic" Foreground="#44475a" Margin="5,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </DockPanel>
             <Grid Background="#44475a" Height="0.5" VerticalAlignment="Bottom" />

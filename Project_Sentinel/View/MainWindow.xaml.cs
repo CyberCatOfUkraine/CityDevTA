@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project_Sentinel.Command;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,31 +25,66 @@ namespace Project_Sentinel.View
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
 
-        // Для згортання вікна
-        private void MinimizeWindow(object sender, RoutedEventArgs e)
+        public static Action MinimizeWindowCommand
         {
-            this.WindowState = WindowState.Minimized;
-        }
-
-        // Для розгортання вікна
-        private void MaximizeWindow(object sender, RoutedEventArgs e)
-        {
-            if (this.WindowState == WindowState.Normal)
+            get
             {
-                this.WindowState = WindowState.Maximized;
+                return new(() => { Application.Current.MainWindow.WindowState = WindowState.Minimized; });
             }
-            else
+            set { }
+        }
+
+        public static Action CloseWindowCommand
+        {
+            get
             {
-                this.WindowState = WindowState.Normal;
+                return new Action(Application.Current.MainWindow.Close);
+            }
+            set { }
+        }
+
+        #region Переміщення вікна за допомогою Drag
+
+        private bool isDragging;
+        private Point clickOffset;
+
+        private void WindowControlPanelGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            isDragging = true;
+            clickOffset = e.GetPosition(this);
+        }
+
+        private void WindowControlPanelGrid_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                Point currentPos = e.GetPosition(this);
+                double dx = currentPos.X - clickOffset.X;
+                double dy = currentPos.Y - clickOffset.Y;
+
+                Left += dx;
+                Top += dy;
             }
         }
 
-        // Для закриття вікна
-        private void CloseWindow(object sender, RoutedEventArgs e)
+        private void WindowControlPanelGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            this.Close();
+            isDragging = false;
         }
+
+        private void Window_MouseLeave(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
+        }
+
+        private void WindowControlPanelGrid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
+        }
+
+        #endregion Переміщення вікна за допомогою Drag
     }
 }
