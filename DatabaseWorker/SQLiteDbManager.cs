@@ -11,28 +11,13 @@ namespace DatabaseWorker
 {
     public class SQLiteDbManager
     {
-        private bool DatabaseExist => File.Exists(SQLiteWorker.GetDbFileName);
-
-        public bool TryCreateDatabase()
+        public SQLiteDbManager(Action callback)
         {
-            var result = false;
-            if (!DatabaseExist)
+            if (!File.Exists(SQLiteWorker.GetDbFileName))
             {
                 new SQLiteTableCreator().CreateTables();
-                result = true;
+                callback.Invoke();
             }
-            return result;
-        }
-
-        public bool TryDeleteDatabase()
-        {
-            var result = false;
-            if (DatabaseExist)
-            {
-                File.Delete(SQLiteWorker.GetDbFileName);
-                result = true;
-            }
-            return result;
         }
 
         public IRepository<App> AppRepository => new AppRepository();

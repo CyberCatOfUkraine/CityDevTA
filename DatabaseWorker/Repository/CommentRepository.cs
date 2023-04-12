@@ -35,7 +35,7 @@ namespace DatabaseWorker.Repository
 
         public bool Exists(int id)
         {
-            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Comment), id), (DbDataReader reader) => { return reader.HasRows; });
+            return GetById(id) == null;
         }
 
         public IEnumerable<Comment> GetAll()

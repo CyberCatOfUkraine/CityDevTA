@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Data.Entity.Infrastructure.Design.Executor;
 
 namespace DatabaseWorker
 {
@@ -30,9 +31,9 @@ namespace DatabaseWorker
 
         public static string SelectAllFromQuery(string tableName) => $"SELECT ROWID,* FROM {tableName}";
 
-        public static string GetByIdQuery(string tableName, int id) => $"SELECT ROWID,* FROM {tableName} WHERE ROWID='{id}'";
+        public static string GetByIdQuery(string tableName, int id) => $"SELECT ROWID,* FROM {tableName} WHERE ROWID={id}";
 
-        public static string RemoveByID(string tableName, int id) => $"DELETE FROM {tableName} WHERE ROWID = '{id}'";
+        public static string RemoveByID(string tableName, int id) => $"DELETE FROM {tableName} WHERE ROWID = {id}";
 
         #region Оновлення даних
 
@@ -42,7 +43,7 @@ namespace DatabaseWorker
 
         public static string UpdateUserQuery(User user) => $"UPDATE {nameof(User)} SET {nameof(User.Name)} = '{user.Name}' WHERE ROWID = {user.Id}";
 
-        public static string UpdateRecordQuery(Record record) => $"UPDATE {nameof(Record)} SET {nameof(Record.App)}Id = '{record.App.Id}', {nameof(Record.User)}Id ='{record.User.Id}', {nameof(Record.Comment)}Id = '{record.Comment}' WHERE ROWID = {record.Id}";
+        public static string UpdateRecordQuery(Record record) => $"UPDATE {nameof(Record)} SET {nameof(Record.App)}Id = {record.App.Id}, {nameof(Record.User)}Id = {record.User.Id}, {nameof(Record.Comment)}Id = {record.Comment.Id} WHERE ROWID = {record.Id}";
 
         #endregion Оновлення даних
 

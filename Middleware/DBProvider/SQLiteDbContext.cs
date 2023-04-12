@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DatabaseWorker;
 using DatabaseWorker.Model;
 using DatabaseWorker.Repository;
 using Middleware.Models;
@@ -14,15 +15,18 @@ namespace Middleware.DBProvider
     {
         private readonly Mapper mapper;
 
-        public SQLiteDbContext(Mapper mapper)
+        public SQLiteDbContext(Mapper mapper, DatabaseWorker.SQLiteDbManager DbManager)
         {
             this.mapper = mapper;
+            this._dbManager = DbManager;
         }
 
-        public IDatabaseRepository<AppDTO> AppRepository => new RepositoryHolder<AppDTO, App>(new AppRepository(), mapper);
-        public IDatabaseRepository<UserDTO> UserRepository => new RepositoryHolder<UserDTO, User>(new UserRepository(), mapper);
-        public IDatabaseRepository<CommentDTO> CommentRepository => new RepositoryHolder<CommentDTO, Comment>(new CommentRepository(), mapper);
-        public IDatabaseRepository<RecordDTO> RecordRepository => new RepositoryHolder<RecordDTO, Record>(new RecordRepository(), mapper);
+        public IDatabaseRepository<AppDTO> AppRepository => new RepositoryHolder<AppDTO, App>(_dbManager.AppRepository, mapper);
+        public IDatabaseRepository<UserDTO> UserRepository => new RepositoryHolder<UserDTO, User>(_dbManager.UserRepository, mapper);
+        public IDatabaseRepository<CommentDTO> CommentRepository => new RepositoryHolder<CommentDTO, Comment>(_dbManager.CommentRepository, mapper);
+        public IDatabaseRepository<RecordDTO> RecordRepository => new RepositoryHolder<RecordDTO, Record>(_dbManager.RecordRepository, mapper);
+
+        public SQLiteDbManager _dbManager { get; }
 
         private class RepositoryHolder<T, Y> : IDatabaseRepository<T> where T : class where Y : class
         {

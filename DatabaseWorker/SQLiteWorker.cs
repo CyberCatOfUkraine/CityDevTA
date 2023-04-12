@@ -10,21 +10,33 @@
 
     internal class SQLiteWorker
     {
-        private SQLiteWorker()
-        {
-        }
+        private const string DbName = "database.db";
+        private const string ConnectionString = $"Data Source={DbName};Version=3;";
+
+        private SQLiteConnection _connection;
 
         private static SQLiteWorker _SQLiteWorker = new();
+
+        public static string GetDbFileName => DbName;
 
         public static SQLiteWorker GetInstance()
         {
             return _SQLiteWorker;
         }
 
-        private const string DbName = "database.db";
-        private const string ConnectionString = $"Data Source={DbName};Version=3;";
+        public SQLiteWorker()
+        {
+            _connection = new SQLiteConnection(ConnectionString);
+            _connection.Open();
+        }
 
-        public static string GetDbFileName => DbName;
+        ~SQLiteWorker()
+        {
+            var connection = _connection;
+
+            connection?.Close();
+            connection?.Dispose();
+        }
 
         internal void SendQuery(string query)
         {
@@ -64,13 +76,10 @@
 
         private async Task MakeQuery(string query)
         {
-            using var sqliteConnection = new SQLiteConnection(ConnectionString);
-
-            await sqliteConnection.OpenAsync();
-            using var transaction = sqliteConnection.BeginTransaction();
+            using var transaction = _connection.BeginTransaction();
             try
             {
-                using var command = sqliteConnection.CreateCommand();
+                using var command = _connection.CreateCommand();
                 command.Transaction = transaction;
                 command.CommandText = query;
 
@@ -86,22 +95,21 @@
 
         private async IAsyncEnumerable<T> MakeQueryWithResponse<T>(string query, Func<DbDataReader, T> processor)
         {
-            using var sqliteConnection = new SQLiteConnection(ConnectionString);
-
-            await sqliteConnection.OpenAsync();
-            using var transaction = sqliteConnection.BeginTransaction();
+            using var transaction = _connection.BeginTransaction();
             bool cancelationNeed = true;
             try
             {
-                using var command = sqliteConnection.CreateCommand();
+                using var command = _connection.CreateCommand();
                 command.Transaction = transaction;
                 command.CommandText = query;
 
                 using (var reader = await command.ExecuteReaderAsync())
+                {
                     while (await reader.ReadAsync())
                     {
                         yield return processor(reader);
                     }
+                }
 
                 transaction.Commit();
                 cancelationNeed = false;
@@ -115,14 +123,14 @@
             }
         }
 
-        internal T GetDbDataReader<T>(string query, Func<DbDataReader, T> func)
+        internal T? GetDbDataReader<T>(string query, Func<DbDataReader, T> func)
         {
             var items = GetList(query, func);
             if (items.Count > 0)
             {
                 return items.First();
             }
-            return default(T);
+            return default;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace DatabaseWorker.Repository
 
         public bool Exists(int id)
         {
-            return SQLiteWorker.GetInstance().GetDbDataReader(SQLiteTemplate.GetByIdQuery(nameof(Record), id), (DbDataReader reader) => { return reader.HasRows; });
+            return GetById(id) == null;
         }
 
         public IEnumerable<Record> GetAll()
@@ -93,6 +93,31 @@ namespace DatabaseWorker.Repository
 
         public void Update(Record entity)
         {
+            var appRepo = new AppRepository();
+            var usrRepo = new UserRepository();
+            var cmntRepo = new CommentRepository();
+
+            var allApp = appRepo.GetAll();
+            var allUsr = usrRepo.GetAll();
+            var allCmnt = cmntRepo.GetAll();
+
+            var app = appRepo!.GetById(entity.App.Id);
+            if (appRepo!.Exists(entity.App.Id))
+            {
+                throw new InvalidOperationException("Неможливо оновити запис, додатку з таким індексом не існує");
+            }
+            if (usrRepo!.Exists(entity.User.Id))
+            {
+                throw new InvalidOperationException("Неможливо оновити запис, користувача з таким індексом не існує");
+            }
+            if (cmntRepo!.Exists(entity.Comment.Id))
+            {
+                throw new InvalidOperationException("Неможливо оновити запис, коментаря з таким індексом не існує");
+            }
+            appRepo.Update(entity.App);
+            usrRepo.Update(entity.User);
+            cmntRepo.Update(entity.Comment);
+
             SQLiteWorker.GetInstance().SendQuery(SQLiteTemplate.UpdateRecordQuery(entity));
         }
     }

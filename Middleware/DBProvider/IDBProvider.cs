@@ -8,10 +8,6 @@ namespace Middleware.DBProvider
 {
     internal interface IDBProvider
     {
-        bool TryCreateDatabase();
-
-        bool TryDeleteDatabase();
-
         public IDatabaseContext databaseContext { get; }
     }
 }
