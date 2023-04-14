@@ -4,11 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Sentinel.View"
-        xmlns:windowControlBtn="clr-namespace:Project_Sentinel.UICustomItem"
+        xmlns:btn="clr-namespace:Project_Sentinel.UICustomItem.Button"
+        xmlns:vm="clr-namespace:Project_Sentinel.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="900"
         WindowStyle="None" AllowsTransparency="True"
         Background="#f8f8f2" ResizeMode="CanResizeWithGrip" MouseLeave="Window_MouseLeave" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <vm:MainWindowViewModel x:Key="MainViewModel" />
+    </Window.Resources>
     <Window.Triggers>
         <EventTrigger RoutedEvent="Loaded">
             <BeginStoryboard>
@@ -43,13 +50,41 @@
                         </Style.Triggers>
                     </Style>
                 </DockPanel.Resources>
-                <windowControlBtn:WindowControlButton x:Name="CloseBtn" Margin="0,2,10,2" DockPanel.Dock="Right" Text="X" Width="35" Height="25"  ButtonAction="{x:Static local:MainWindow.CloseWindowCommand}" />
-                <windowControlBtn:WindowControlButton x:Name="MinimizeBtn" Margin="0,2,10,2" DockPanel.Dock="Right" Text="_" Width="35" Height="25" ButtonAction="{x:Static local:MainWindow.MinimizeWindowCommand}" />
+                <btn:WindowControlButton x:Name="CloseBtn" Margin="0,2,10,2" DockPanel.Dock="Right" Text="X" Width="35" Height="25"  ButtonAction="{x:Static local:MainWindow.CloseWindowCommand}" />
+                <btn:WindowControlButton x:Name="MinimizeBtn" Margin="0,2,10,2" DockPanel.Dock="Right" Text="_" Width="35" Height="25" ButtonAction="{x:Static local:MainWindow.MinimizeWindowCommand}" />
                 <TextBlock Text="Вартовий v1.0" FontSize="20" FontStyle="Italic" Foreground="#44475a" Margin="5,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </DockPanel>
             <Grid Background="#44475a" Height="0.5" VerticalAlignment="Bottom" />
         </Grid>
         <Grid Grid.Row="1">
+            <Grid Name="MainGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid Background="#f8f8f2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Заголовок бічної панелі -->
+                    <TextBlock Grid.Row="0" Text="Меню" FontSize="24" FontFamily="Trebuchet MS" Foreground="#44475a" Margin="20,20,0,0" Padding="20,0,0,0" />
+
+                    <!-- Кнопки з пунктами меню -->
+                    <StackPanel Grid.Row="1" Margin="20,40">
+                        <StackPanel.Resources>
+                            <Style TargetType="btn:MenuPanelButton">
+                                <Setter Property="Margin" Value="0,10,0,10" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <btn:MenuPanelButton  BtnCaption="Програми" BtnCommand="{Binding ShowTestMessage, Source={StaticResource MainViewModel}}" />
+                    </StackPanel>
+                </Grid>
+                <Border Grid.Column="1" BorderBrush="#44475a" BorderThickness="1" CornerRadius="10" Margin="40">
+                    <Grid Name="ContainerGrid" Margin="5" />
+                </Border>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
