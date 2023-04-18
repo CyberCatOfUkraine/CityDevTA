@@ -14,6 +14,7 @@
                 <Color x:Key="BorderColor2">#f8f8f2</Color>
                 <Color x:Key="ButtonColor1">#f8f8f2</Color>
                 <Color x:Key="ButtonColor2">#bd93f9</Color>
+                <Color x:Key="BtnAccentForegroundColor">#44475a</Color>
             </Button.Resources>
             <Button.Template>
                 <ControlTemplate TargetType="Button">
@@ -23,7 +24,7 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="Border" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" To="{StaticResource BorderColor2}" Duration="0:0:0.2" />
                                     <ColorAnimation Storyboard.TargetName="Border" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="{StaticResource ButtonColor2}" Duration="0:0:0.2" />
-                                    <ColorAnimation Storyboard.TargetName="BtnTextBlock" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="{StaticResource BorderColor2}" Duration="0:0:0.2" />
+                                    <ColorAnimation Storyboard.TargetName="BtnTextBlock" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="{StaticResource BtnAccentForegroundColor}" Duration="0:0:0.2" />
                                     <ColorAnimation Storyboard.TargetName="LocalGrid" Storyboard.TargetProperty="(Grid.Background).(SolidColorBrush.Color)" To="{StaticResource ButtonColor2}" Duration="0:0:0.2" />
                                 </Storyboard>
                             </BeginStoryboard>

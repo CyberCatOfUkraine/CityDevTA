@@ -78,11 +78,16 @@
                                 <Setter Property="Margin" Value="0,10,0,10" />
                             </Style>
                         </StackPanel.Resources>
-                        <btn:MenuPanelButton  BtnCaption="Програми" BtnCommand="{Binding ShowTestMessage, Source={StaticResource MainViewModel}}" />
+                        <btn:MenuPanelButton  BtnCaption="Записи" BtnCommand="{Binding RecordsMenuItemCommand, Source={StaticResource MainViewModel}}" />
+                        <btn:MenuPanelButton  BtnCaption="Програми" BtnCommand="{Binding ProgramMenuItemCommand, Source={StaticResource MainViewModel}}" />
+                        <btn:MenuPanelButton  BtnCaption="Користувачі" BtnCommand="{Binding UsersMenuItemCommand, Source={StaticResource MainViewModel}}" />
+                        <btn:MenuPanelButton  BtnCaption="Коментарі" BtnCommand="{Binding CommentsMenuItemCommand, Source={StaticResource MainViewModel}}" />
                     </StackPanel>
                 </Grid>
                 <Border Grid.Column="1" BorderBrush="#44475a" BorderThickness="1" CornerRadius="10" Margin="40">
-                    <Grid Name="ContainerGrid" Margin="5" />
+                    <Grid Margin="5" x:Name="ContainerGrid" Background="#f8f8f2">
+                        <ContentControl Grid.Row="1" Content="{Binding Control}"  Background="#f8f8f2" />
+                    </Grid>
                 </Border>
             </Grid>
         </Grid>
