@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows;
 using Middleware.Models;
+using Project_Sentinel.UICustomItem.NotificationMessage;
 
 namespace Project_Sentinel.ViewModel
 {
@@ -56,8 +57,8 @@ namespace Project_Sentinel.ViewModel
             Apps = App.DBProvider.databaseContext.AppRepository.GetAll().ToList();
         });
 
-        public ICommand EditCommand => new MyCommand((object obj) => { ShowTestMessage(); });
-        public ICommand DeleteCommand => new MyCommand((object obj) => { ShowTestMessage(); });
+        public ICommand EditCommand => new MyCommand((object obj) => { new OkCancelNotification("test 1", "test", true).Show(); });
+        public ICommand DeleteCommand => new MyCommand((object obj) => { new OkCancelNotification("test 2", "toast", false).Show(); });
         //public ICommand ProgramMenuItemCommand => new MyCommand((object obj) => { AddViewToViewCollection(new ProgramsView()); });
     }
 }

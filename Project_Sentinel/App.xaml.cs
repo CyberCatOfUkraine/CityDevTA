@@ -1,5 +1,6 @@
 ﻿using Middleware.DBProvider;
 using Middleware.DBProvider.Test;
+using Project_Sentinel.UICustomItem.NotificationMessage;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -22,11 +23,20 @@ namespace Project_Sentinel
         {
             get
             {
-                var testCallback = delegate () { Console.WriteLine("Db is created"); };
-                SQLiteDBProvider ??= new SQLiteDBProvider(testCallback);
-                FakeDbProvider ??= new FakeDbProvider(testCallback);
-                IDBProvider dbProvider = FakeDbProvider;
-                return dbProvider;
+                var successDbCreatedCallback = delegate () { new OkCancelNotification("Виконано успішно!", "Підключення до бази даних", true).Show(); };
+                FakeDbProvider ??= new FakeDbProvider(successDbCreatedCallback);
+                try
+                {
+                    SQLiteDBProvider ??= new SQLiteDBProvider(successDbCreatedCallback);
+
+                    IDBProvider dbProvider = FakeDbProvider;
+                    return dbProvider;
+                }
+                catch (Exception e)
+                {
+                    new OkCancelNotification($"Виникла помилка: {e.Message} !", "Підключення до бази даних", false).Show();
+                }
+                return FakeDbProvider;
             }
         }
     }

@@ -10,12 +10,15 @@ namespace Middleware.DBProvider.Test
     {
         public IDatabaseContext databaseContext => new FakeDatabaseContext();
 
-        public Action Callback { get; }
+        public static bool? DbIsCreated = false;
 
         public FakeDbProvider(Action dbCreatedCallback)
         {
-            Callback = dbCreatedCallback;
-            Callback.Invoke();
+            if (DbIsCreated != null && !DbIsCreated.Value)
+            {
+                dbCreatedCallback.Invoke();
+                DbIsCreated = true;
+            }
         }
     }
 }

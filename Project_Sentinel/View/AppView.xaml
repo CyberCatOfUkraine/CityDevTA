@@ -198,8 +198,8 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Column="0" Text="{Binding Name}" />
-                            <btn:OrdinaryButton Grid.Column="1"  BtnOCaption="Редагувати" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="4"  BtnOCommand="{Binding ShowTestMessageCommand, Source={StaticResource RecordVM}}" />
-                            <btn:OrdinaryButton Grid.Column="2"  BtnOCaption="Видалити" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="4"  BtnOCommand="{Binding ShowTestMessageCommand, Source={StaticResource RecordVM}}" />
+                            <btn:OrdinaryButton Grid.Column="1"  BtnOCaption="Редагувати" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="4"  BtnOCommand="{Binding EditCommand, Source={StaticResource RecordVM}}" />
+                            <btn:OrdinaryButton Grid.Column="2"  BtnOCaption="Видалити" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="4"  BtnOCommand="{Binding DeleteCommand, Source={StaticResource RecordVM}}" />
                         </Grid>
                     </Border>
                 </DataTemplate>

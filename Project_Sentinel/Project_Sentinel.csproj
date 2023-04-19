@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Middleware\Middleware.csproj" />
+	  <ProjectReference Include="..\Notification.Wpf\Notification.Wpf.csproj" />
 	</ItemGroup>
 
 </Project>
