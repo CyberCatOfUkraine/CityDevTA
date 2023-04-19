@@ -18,9 +18,9 @@ namespace Project_Sentinel.View
     /// <summary>
     /// Interaction logic for ProgramsView.xaml
     /// </summary>
-    public partial class ProgramsView : UserControl
+    public partial class AppView : UserControl
     {
-        public ProgramsView()
+        public AppView()
         {
             InitializeComponent();
         }

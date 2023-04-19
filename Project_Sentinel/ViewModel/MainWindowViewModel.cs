@@ -56,7 +56,7 @@ namespace Project_Sentinel.ViewModel
         }
 
         public ICommand ShowTestMessageCommand => new MyCommand((object obj) => { ShowTestMessage(); });
-        public ICommand ProgramMenuItemCommand => new MyCommand((object obj) => { AddViewToViewCollection(new ProgramsView()); });
+        public ICommand ProgramMenuItemCommand => new MyCommand((object obj) => { AddViewToViewCollection(new AppView()); });
 
         public ICommand UsersMenuItemCommand => new MyCommand((object obj) => { AddViewToViewCollection(new UsersView()); });
         public ICommand CommentsMenuItemCommand => new MyCommand((object obj) => { AddViewToViewCollection(new CommentView()); });

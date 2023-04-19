@@ -8,9 +8,9 @@ namespace Middleware.DBProvider
         private SQLiteDbManager _dbManager;
         private SQLiteDbContext _databaseContext;
 
-        public SQLiteDBProvider(Action callback)
+        public SQLiteDBProvider(Action dbCreatedCallback)
         {
-            _dbManager = new(callback);
+            _dbManager = new(dbCreatedCallback);
 
             var configuration = new MapperConfiguration(cfg =>
             {

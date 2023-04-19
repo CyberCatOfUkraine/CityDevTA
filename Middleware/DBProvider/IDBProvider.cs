@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Middleware.DBProvider
 {
-    internal interface IDBProvider
+    public interface IDBProvider
     {
         public IDatabaseContext databaseContext { get; }
     }
