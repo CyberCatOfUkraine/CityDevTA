@@ -10,7 +10,7 @@ namespace DatabaseWorker.PreventSQLInjection
     //TODO: Впихнуть цей клас в шаблони для перевірки значень типу стрінг від ін'єкцій, або перенести в юай, або зробити і те і те
     internal static class SQLInjectionRemover
     {
-        internal static string QueryInjectionRemoving(string query)
+        internal static string TryClean(string query)
         {
             if (string.IsNullOrEmpty(query))
             {

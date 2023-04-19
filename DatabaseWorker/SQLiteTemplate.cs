@@ -1,4 +1,5 @@
 ﻿using DatabaseWorker.Model;
+using DatabaseWorker.PreventSQLInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -18,7 +19,7 @@ namespace DatabaseWorker
         /// </summary>
         /// <param name="tableName">Назва таблиці</param>
         /// <returns></returns>
-        public static string CheckTableExistQuery(string tableName) => $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';";
+        public static string CheckTableExistQuery(string tableName) => $"SELECT name FROM sqlite_master WHERE type='table' AND name='{SQLInjectionRemover.TryClean(tableName)}';";
 
         #region Створення таблиць якщо вони не були створені
 
@@ -29,19 +30,19 @@ namespace DatabaseWorker
 
         #endregion Створення таблиць якщо вони не були створені
 
-        public static string SelectAllFromQuery(string tableName) => $"SELECT ROWID,* FROM {tableName}";
+        public static string SelectAllFromQuery(string tableName) => $"SELECT ROWID,* FROM {SQLInjectionRemover.TryClean(tableName)}";
 
-        public static string GetByIdQuery(string tableName, int id) => $"SELECT ROWID,* FROM {tableName} WHERE ROWID={id}";
+        public static string GetByIdQuery(string tableName, int id) => $"SELECT ROWID,* FROM {SQLInjectionRemover.TryClean(tableName)} WHERE ROWID={id}";
 
-        public static string RemoveByID(string tableName, int id) => $"DELETE FROM {tableName} WHERE ROWID = {id}";
+        public static string RemoveByID(string tableName, int id) => $"DELETE FROM {SQLInjectionRemover.TryClean(tableName)} WHERE ROWID = {id}";
 
         #region Оновлення даних
 
-        public static string UpdateAppQuery(App app) => $"UPDATE {nameof(App)} SET {nameof(App.Name)} = '{app.Name}' WHERE ROWID = {app.Id}";
+        public static string UpdateAppQuery(App app) => $"UPDATE {nameof(App)} SET {nameof(App.Name)} = '{SQLInjectionRemover.TryClean(app.Name)}' WHERE ROWID = {app.Id}";
 
-        public static string UpdateCommentQuery(Comment comment) => $"UPDATE {nameof(Comment)} SET {nameof(Comment.Text)} = '{comment.Text}', {nameof(Comment.TimeStamp)} = '{comment.TimeStamp.ToString(CultureInfo.InvariantCulture)}' WHERE ROWID = {comment.Id}";
+        public static string UpdateCommentQuery(Comment comment) => $"UPDATE {nameof(Comment)} SET {nameof(Comment.Text)} = '{SQLInjectionRemover.TryClean(comment.Text)}', {nameof(Comment.TimeStamp)} = '{comment.TimeStamp.ToString(CultureInfo.InvariantCulture)}' WHERE ROWID = {comment.Id}";
 
-        public static string UpdateUserQuery(User user) => $"UPDATE {nameof(User)} SET {nameof(User.Name)} = '{user.Name}' WHERE ROWID = {user.Id}";
+        public static string UpdateUserQuery(User user) => $"UPDATE {nameof(User)} SET {nameof(User.Name)} = '{SQLInjectionRemover.TryClean(user.Name)}' WHERE ROWID = {user.Id}";
 
         public static string UpdateRecordQuery(Record record) => $"UPDATE {nameof(Record)} SET {nameof(Record.App)}Id = {record.App.Id}, {nameof(Record.User)}Id = {record.User.Id}, {nameof(Record.Comment)}Id = {record.Comment.Id} WHERE ROWID = {record.Id}";
 
@@ -49,16 +50,16 @@ namespace DatabaseWorker
 
         #region Додавання сутностей
 
-        public static string InsertAppQuery(App app) => $"INSERT INTO {nameof(App)} ({nameof(App.Name)}) VALUES ('{app.Name}')";
+        public static string InsertAppQuery(App app) => $"INSERT INTO {nameof(App)} ({nameof(App.Name)}) VALUES ('{SQLInjectionRemover.TryClean(app.Name)}')";
 
-        public static string InsertCommentQuery(Comment comment) => $"INSERT INTO {nameof(Comment)} ({nameof(Comment.Text)}, {nameof(Comment.TimeStamp)}) VALUES ('{comment.Text}', '{comment.TimeStamp.ToString(CultureInfo.InvariantCulture)}')";
+        public static string InsertCommentQuery(Comment comment) => $"INSERT INTO {nameof(Comment)} ({nameof(Comment.Text)}, {nameof(Comment.TimeStamp)}) VALUES ('{SQLInjectionRemover.TryClean(comment.Text)}', '{comment.TimeStamp.ToString(CultureInfo.InvariantCulture)}')";
 
-        public static string InsertUserQuery(User user) => $"INSERT INTO {nameof(User)} ({nameof(User.Name)}) VALUES ('{user.Name}')";
+        public static string InsertUserQuery(User user) => $"INSERT INTO {nameof(User)} ({nameof(User.Name)}) VALUES ('{SQLInjectionRemover.TryClean(user.Name)}')";
 
         public static string InsertRecordQuery(Record record) => $"INSERT INTO {nameof(Record)} ({nameof(Record.App)}Id, {nameof(Record.User)}Id, {nameof(Record.Comment)}Id) VALUES ('{record.App.Id}', '{record.User.Id}', '{record.Comment.Id}')";
 
         #endregion Додавання сутностей
 
-        public static string GetRowsCountQuery(string tableName) => $"SELECT COUNT(*) FROM {tableName}; ";
+        public static string GetRowsCountQuery(string tableName) => $"SELECT COUNT(*) FROM {SQLInjectionRemover.TryClean(tableName)}; ";
     }
 }
