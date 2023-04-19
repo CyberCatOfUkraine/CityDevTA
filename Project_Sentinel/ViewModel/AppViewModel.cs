@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows;
 using Middleware.Models;
 using Project_Sentinel.UICustomItem.NotificationMessage;
+using Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow;
 
 namespace Project_Sentinel.ViewModel
 {
@@ -52,8 +53,18 @@ namespace Project_Sentinel.ViewModel
 
         public ICommand AddCommand => new MyCommand((object obj) =>
         {
-            var app = new AppDTO("App");
-            App.DBProvider.databaseContext.AppRepository.Add(app);
+            try
+            {
+                var addAction = delegate (AppDTO app) { App.DBProvider.databaseContext.AppRepository.Add(app); };
+                var addAppWindow = new AddAppWindow(addAction);
+                addAppWindow.ShowDialog();
+            }
+            catch (Exception e)
+            {
+                new OkCancelNotification($"Виникла помилка: {e.Message} !", "Додавання нової програми", false).Show();
+            }
+            new OkCancelNotification("Виконано успішно!", "Додавання нової програми", true).Show();
+
             Apps = App.DBProvider.databaseContext.AppRepository.GetAll().ToList();
         });
 
