@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow" xmlns:vm="clr-namespace:Project_Sentinel.ViewModel" xmlns:btn="clr-namespace:Project_Sentinel.UICustomItem.Button"
         mc:Ignorable="d"
-        Title="AddAppWindow" Height="450" Width="800" Background="#f8f8f2" WindowStyle="None" WindowStartupLocation="CenterScreen">
+        Title="AddAppWindow" Height="400" Width="600" Background="#f8f8f2" WindowStyle="None" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="45" />
