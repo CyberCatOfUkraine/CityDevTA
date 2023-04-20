@@ -9,6 +9,9 @@ using System.Windows;
 using Middleware.Models;
 using Project_Sentinel.UICustomItem.NotificationMessage;
 using Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow;
+using Project_Sentinel.UICustomItem.Button;
+using DatabaseWorker.Model;
+using System.Collections.ObjectModel;
 
 namespace Project_Sentinel.ViewModel
 {
@@ -24,9 +27,9 @@ namespace Project_Sentinel.ViewModel
 #endif
         }
 
-        private List<AppDTO> _apps;
+        private ObservableCollection<AppDTO> _apps;
 
-        public List<AppDTO> Apps
+        public ObservableCollection<AppDTO> Apps
         {
             get { return _apps; }
             set
@@ -41,7 +44,7 @@ namespace Project_Sentinel.ViewModel
 
         public AppViewModel()
         {
-            Apps = App.DBProvider.databaseContext.AppRepository.GetAll().ToList();
+            TryUpdateView();
         }
 
         private void ShowTestMessage(string commandName = "TestMessage")
@@ -55,8 +58,7 @@ namespace Project_Sentinel.ViewModel
         {
             try
             {
-                var addAction = delegate (AppDTO app) { App.DBProvider.databaseContext.AppRepository.Add(app); };
-                var addAppWindow = new AddAppWindow(addAction);
+                var addAppWindow = new AddAppWindow(App.DBProvider.databaseContext.AppRepository.Add);
                 addAppWindow.ShowDialog();
             }
             catch (Exception e)
@@ -65,11 +67,74 @@ namespace Project_Sentinel.ViewModel
             }
             new OkCancelNotification("Виконано успішно!", "Додавання нової програми", true).Show();
 
-            Apps = App.DBProvider.databaseContext.AppRepository.GetAll().ToList();
+            TryUpdateView();
         });
 
-        public ICommand EditCommand => new MyCommand((object obj) => { new OkCancelNotification("test 1", "test", true).Show(); });
-        public ICommand DeleteCommand => new MyCommand((object obj) => { new OkCancelNotification("test 2", "toast", false).Show(); });
-        //public ICommand ProgramMenuItemCommand => new MyCommand((object obj) => { AddViewToViewCollection(new ProgramsView()); });
+        public ICommand EditCommand => new MyCommand((object obj) =>
+        {
+            try
+            {
+                if (obj is AppDTO app)
+                {
+                    EditAppWindow window = new EditAppWindow(app, App.DBProvider.databaseContext.AppRepository.Update);
+                    window.ShowDialog();
+                    var modifiedApp = window.CurrentApp;
+                    if (modifiedApp == app)
+                    {
+                        new OkCancelNotification("Виконано успішно!", "Редагування програми", true).Show();
+                    }
+                }
+                else
+                {
+                    throw new Exception("Вибрана програма має пусте значення");
+                }
+            }
+            catch (Exception e)
+            {
+                new OkCancelNotification($"Виникла помилка: {e.Message} !", "Редагування програми", false).Show();
+            }
+
+            TryUpdateView();
+        });
+
+        public ICommand DeleteCommand => new MyCommand((object obj) =>
+        {
+            try
+            {
+                if (obj is AppDTO app)
+                {
+                    App.DBProvider.databaseContext.AppRepository.Delete(app);
+                    Apps.Remove(app);
+                    new OkCancelNotification("Виконано успішно!", "Видалення програми", true).Show();
+                }
+                else
+                {
+                    throw new Exception("Вибрана програма має пусте значення");
+                }
+            }
+            catch (Exception e)
+            {
+                new OkCancelNotification($"Виникла помилка: {e.Message} !", "Видалення програми", false).Show();
+            }
+        });
+
+        public void TryUpdateView()
+        {
+            try
+            {
+                var apps = App.DBProvider.databaseContext.AppRepository.GetAll();
+
+                var collection = new ObservableCollection<AppDTO>();
+                foreach (var item in apps)
+                {
+                    collection.Add(item);
+                }
+                Apps = collection;
+            }
+            catch (Exception e)
+            {
+                new OkCancelNotification($"Виникла помилка: {e.Message} !", "Оновлення списку програм", false).Show();
+            }
+        }
     }
 }

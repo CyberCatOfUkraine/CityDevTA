@@ -47,9 +47,21 @@ namespace Project_Sentinel.UICustomItem.Button
             set { SetValue(MyCommandProperty, value); }
         }
 
+        public static readonly DependencyProperty MyCommandParameterProperty = DependencyProperty.Register(
+            "BtnOCommandParameter",
+            typeof(object),
+            typeof(OrdinaryButton),
+            new PropertyMetadata(null));
+
+        public object BtnOCommandParameter
+        {
+            get { return GetValue(MyCommandParameterProperty); }
+            set { SetValue(MyCommandParameterProperty, value); }
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            BtnOCommand?.Execute(null);
+            BtnOCommand?.Execute(BtnOCommandParameter);
         }
     }
 }

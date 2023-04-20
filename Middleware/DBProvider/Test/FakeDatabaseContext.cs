@@ -75,51 +75,61 @@ namespace Middleware.DBProvider.Test
                     return (typeof(T)!.GetProperty("Id") != null && y.Id == id) || (typeof(T)!.GetProperty("id") != null && y.id == id);
                 });
             }
-
             public void Update(T entity)
             {
-                var item = entity;
-                if (item.GetType().GetProperty("Id") != null)
+                if (entity.GetType().GetProperty("Id") != null)
                 {
-                    var members = item.GetType().GetMembers()
+                    var members = entity.GetType().GetMembers()
                         .Where(member => member.MemberType == MemberTypes.Field || member.MemberType == MemberTypes.Property)
                         .Where(member => member.Name != "Id");
 
                     foreach (var member in members)
                     {
-                        if (member.MemberType == MemberTypes.Field)
+                        foreach (var item in list)
                         {
-                            var field = item.GetType().GetField(member.Name);
-                            var value = field.GetValue(item);
-                            field.SetValue(item, value);
-                        }
-                        else if (member.MemberType == MemberTypes.Property)
-                        {
-                            var prop = item.GetType().GetProperty(member.Name);
-                            var value = prop.GetValue(item);
-                            prop.SetValue(item, value);
+                            if (item.GetType().GetProperty("Id") != null && item.GetType().GetProperty("Id").GetValue(item).Equals(entity.GetType().GetProperty("Id").GetValue(entity)))
+                            {
+                                if (member.MemberType == MemberTypes.Field)
+                                {
+                                    var field = item.GetType().GetField(member.Name);
+                                    var value = field.GetValue(entity);
+                                    field.SetValue(item, value);
+                                }
+                                else if (member.MemberType == MemberTypes.Property)
+                                {
+                                    var prop = item.GetType().GetProperty(member.Name);
+                                    var value = prop.GetValue(entity);
+                                    prop.SetValue(item, value);
+                                }
+                            }
                         }
                     }
                 }
-                else if (item.GetType().GetProperty("id") != null)
+                else if (entity.GetType().GetProperty("id") != null)
                 {
-                    var members = item.GetType().GetMembers()
+                    var members = entity.GetType().GetMembers()
                         .Where(member => member.MemberType == MemberTypes.Field || member.MemberType == MemberTypes.Property)
                         .Where(member => member.Name != "id");
 
                     foreach (var member in members)
                     {
-                        if (member.MemberType == MemberTypes.Field)
+                        foreach (var item in list)
                         {
-                            var field = item.GetType().GetField(member.Name);
-                            var value = field.GetValue(item);
-                            field.SetValue(item, value);
-                        }
-                        else if (member.MemberType == MemberTypes.Property)
-                        {
-                            var prop = item.GetType().GetProperty(member.Name);
-                            var value = prop.GetValue(item);
-                            prop.SetValue(item, value);
+                            if (item.GetType().GetProperty("id") != null && item.GetType().GetProperty("id").GetValue(item).Equals(entity.GetType().GetProperty("id").GetValue(entity)))
+                            {
+                                if (member.MemberType == MemberTypes.Field)
+                                {
+                                    var field = item.GetType().GetField(member.Name);
+                                    var value = field.GetValue(entity);
+                                    field.SetValue(item, value);
+                                }
+                                else if (member.MemberType == MemberTypes.Property)
+                                {
+                                    var prop = item.GetType().GetProperty(member.Name);
+                                    var value = prop.GetValue(entity);
+                                    prop.SetValue(item, value);
+                                }
+                            }
                         }
                     }
                 }
