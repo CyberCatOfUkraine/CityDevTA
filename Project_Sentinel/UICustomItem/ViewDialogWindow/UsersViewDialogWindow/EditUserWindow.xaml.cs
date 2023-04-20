@@ -1,6 +1,7 @@
-﻿using Middleware.Models;
+﻿using DatabaseWorker.Model;
+using Middleware.Models;
 using Project_Sentinel.Command;
-using Project_Sentinel.UICustomItem.NotificationMessage;
+using Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,26 +16,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow
+namespace Project_Sentinel.UICustomItem.ViewDialogWindow.UsersViewDialogWindow
 {
     /// <summary>
-    /// Interaction logic for EditAppWindow.xaml
+    /// Interaction logic for EditUserWindow.xaml
     /// </summary>
-    public partial class EditAppWindow : Window
+    public partial class EditUserWindow : Window
     {
-        public EditAppWindow(AppDTO app, Action<AppDTO> editAction)
+        public EditUserWindow(UserDTO user, Action<UserDTO> editAction)
         {
-            InitializeComponent();
-
             Instance = this;
             DataContext = this;
             this.editAction = editAction;
-            CurrentApp = app;
+            CurrentUser = user;
+            InitializeComponent();
         }
 
-        private Action<AppDTO> editAction;
+        private Action<UserDTO> editAction;
 
-        private static EditAppWindow Instance { get; set; }
+        private static EditUserWindow Instance { get; set; }
 
         public static Action CloseWindowCommand
         {
@@ -47,12 +47,12 @@ namespace Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow
 
         public ICommand EditCommand => new MyCommand((object obj) => { EditApp(); });
 
-        public AppDTO CurrentApp { get; set; }
+        public UserDTO CurrentUser { get; set; }
 
         private void EditApp()
         {
-            CurrentApp = new AppDTO(AppNameTextBox.Text);
-            editAction.Invoke(CurrentApp);
+            CurrentUser = new UserDTO(UserNameTextBox.Text);
+            editAction.Invoke(CurrentUser);
             Instance.Close();
         }
     }

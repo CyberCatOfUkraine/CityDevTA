@@ -46,10 +46,12 @@ namespace Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow
         }
 
         public ICommand AddCommand => new MyCommand((object obj) => { AddApp(); });
+        public AppDTO CurrentApp;
 
         private void AddApp()
         {
-            addAction.Invoke(new AppDTO(AppNameTextBox.Text)); new OkCancelNotification("test 1", "test", true).Show(); ;
+            CurrentApp = new AppDTO(AppNameTextBox.Text);
+            addAction.Invoke(CurrentApp);
             Instance.Close();
         }
     }

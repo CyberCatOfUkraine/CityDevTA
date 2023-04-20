@@ -1,6 +1,7 @@
 ﻿using Middleware.Models;
 using Project_Sentinel.Command;
 using Project_Sentinel.UICustomItem.NotificationMessage;
+using Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,26 +16,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow
+namespace Project_Sentinel.UICustomItem.ViewDialogWindow.UsersViewDialogWindow
 {
     /// <summary>
-    /// Interaction logic for EditAppWindow.xaml
+    /// Interaction logic for AddUserWindow.xaml
     /// </summary>
-    public partial class EditAppWindow : Window
+    public partial class AddUserWindow : Window
     {
-        public EditAppWindow(AppDTO app, Action<AppDTO> editAction)
+        private Action<UserDTO> addAction;
+
+        public AddUserWindow(Action<UserDTO> addAction)
         {
             InitializeComponent();
-
             Instance = this;
             DataContext = this;
-            this.editAction = editAction;
-            CurrentApp = app;
+            this.addAction = addAction;
         }
 
-        private Action<AppDTO> editAction;
-
-        private static EditAppWindow Instance { get; set; }
+        private static AddUserWindow Instance { get; set; }
+        public UserDTO CurrentUser;
 
         public static Action CloseWindowCommand
         {
@@ -45,14 +45,12 @@ namespace Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow
             set { }
         }
 
-        public ICommand EditCommand => new MyCommand((object obj) => { EditApp(); });
+        public ICommand AddCommand => new MyCommand((object obj) => { AddUser(); });
 
-        public AppDTO CurrentApp { get; set; }
-
-        private void EditApp()
+        private void AddUser()
         {
-            CurrentApp = new AppDTO(AppNameTextBox.Text);
-            editAction.Invoke(CurrentApp);
+            CurrentUser = new UserDTO(UserNameTextBox.Text);
+            addAction.Invoke(CurrentUser);
             Instance.Close();
         }
     }

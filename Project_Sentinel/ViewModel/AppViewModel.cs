@@ -60,12 +60,15 @@ namespace Project_Sentinel.ViewModel
             {
                 var addAppWindow = new AddAppWindow(App.DBProvider.databaseContext.AppRepository.Add);
                 addAppWindow.ShowDialog();
+                if (addAppWindow.CurrentApp != null)
+                {
+                    new OkCancelNotification("Виконано успішно!", "Додавання нової програми", true).Show();
+                }
             }
             catch (Exception e)
             {
                 new OkCancelNotification($"Виникла помилка: {e.Message} !", "Додавання нової програми", false).Show();
             }
-            new OkCancelNotification("Виконано успішно!", "Додавання нової програми", true).Show();
 
             TryUpdateView();
         });
@@ -79,7 +82,7 @@ namespace Project_Sentinel.ViewModel
                     EditAppWindow window = new EditAppWindow(app, App.DBProvider.databaseContext.AppRepository.Update);
                     window.ShowDialog();
                     var modifiedApp = window.CurrentApp;
-                    if (modifiedApp == app)
+                    if (modifiedApp != app)
                     {
                         new OkCancelNotification("Виконано успішно!", "Редагування програми", true).Show();
                     }

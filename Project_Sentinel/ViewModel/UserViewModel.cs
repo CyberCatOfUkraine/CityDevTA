@@ -8,6 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
+using Middleware.Models;
+using Project_Sentinel.UICustomItem.NotificationMessage;
+using Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow;
+using System.Collections.ObjectModel;
+using Project_Sentinel.UICustomItem.ViewDialogWindow.UsersViewDialogWindow;
 
 namespace Project_Sentinel.ViewModel
 {
@@ -23,12 +28,117 @@ namespace Project_Sentinel.ViewModel
 #endif
         }
 
+        private ObservableCollection<UserDTO> _users;
+
+        public ObservableCollection<UserDTO> Users
+        {
+            get { return _users; }
+            set
+            {
+                if (_users != value)
+                {
+                    _users = value;
+                    OnPropertyChanged(nameof(Users));
+                }
+            }
+        }
+
+        public UserViewModel()
+        {
+            TryUpdateView();
+        }
+
         private void ShowTestMessage(string commandName = "TestMessage")
         {
             MessageBox.Show($"This is {commandName}!");
         }
 
         public ICommand ShowTestMessageCommand => new MyCommand((object obj) => { ShowTestMessage(); });
-        //public ICommand ProgramMenuItemCommand => new MyCommand((object obj) => { AddViewToViewCollection(new ProgramsView()); });
+
+        public ICommand AddCommand => new MyCommand((object obj) =>
+        {
+            try
+            {
+                var addUserWindow = new AddUserWindow(App.DBProvider.databaseContext.UserRepository.Add);
+                addUserWindow.ShowDialog();
+                if (addUserWindow.CurrentUser != null)
+                {
+                    new OkCancelNotification("Виконано успішно!", "Додавання нового користувача", true).Show();
+                }
+            }
+            catch (Exception e)
+            {
+                new OkCancelNotification($"Виникла помилка: {e.Message} !", "Додавання нового користувача", false).Show();
+            }
+
+            TryUpdateView();
+        });
+
+        public ICommand EditCommand => new MyCommand((object obj) =>
+        {
+            try
+            {
+                if (obj is UserDTO user)
+                {
+                    EditUserWindow window = new EditUserWindow(user, App.DBProvider.databaseContext.UserRepository.Update);
+                    window.ShowDialog();
+                    var modifiedUser = window.CurrentUser;
+                    if (modifiedUser != user)
+                    {
+                        new OkCancelNotification("Виконано успішно!", "Редагування користувача", true).Show();
+                    }
+                }
+                else
+                {
+                    throw new Exception("Вибраний користувач має пусте значення");
+                }
+            }
+            catch (Exception e)
+            {
+                new OkCancelNotification($"Виникла помилка: {e.Message} !", "Редагування користувача", false).Show();
+            }
+
+            TryUpdateView();
+        });
+
+        public ICommand DeleteCommand => new MyCommand((object obj) =>
+        {
+            try
+            {
+                if (obj is UserDTO user)
+                {
+                    App.DBProvider.databaseContext.UserRepository.Delete(user);
+                    Users.Remove(user);
+                    new OkCancelNotification("Виконано успішно!", "Видалення користувача", true).Show();
+                }
+                else
+                {
+                    throw new Exception("Вибраний користувач має пусте значення");
+                }
+            }
+            catch (Exception e)
+            {
+                new OkCancelNotification($"Виникла помилка: {e.Message} !", "Видалення користувача", false).Show();
+            }
+        });
+
+        public void TryUpdateView()
+        {
+            try
+            {
+                var users = App.DBProvider.databaseContext.UserRepository.GetAll();
+
+                var collection = new ObservableCollection<UserDTO>();
+                foreach (var item in users)
+                {
+                    collection.Add(item);
+                }
+                Users = collection;
+            }
+            catch (Exception e)
+            {
+                new OkCancelNotification($"Виникла помилка: {e.Message} !", "Оновлення списку користувачів", false).Show();
+            }
+        }
     }
 }
