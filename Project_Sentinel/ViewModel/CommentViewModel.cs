@@ -107,6 +107,21 @@ namespace Project_Sentinel.ViewModel
             {
                 if (obj is CommentDTO comment)
                 {
+                    var isCommentPresent = false;
+                    var allComments = App.DBProvider.databaseContext.CommentRepository.GetAll().ToList();
+                    foreach (var record in App.DBProvider.databaseContext.RecordRepository.GetAll())
+                    {
+                        if (allComments.ToList().Exists(x => x.Id == record.Comment.Id))
+                        {
+                            isCommentPresent = true;
+                        }
+                    }
+                    if (isCommentPresent)
+                    {
+                        new OkCancelNotification($"Коментар пов'язаний з записом, видалість запис якщо потрібно видалити коментаря !", "Видалення коментаря", false).Show();
+                        return;
+                    }
+
                     App.DBProvider.databaseContext.CommentRepository.Delete(comment);
                     Comments.Remove(comment);
                     new OkCancelNotification("Виконано успішно!", "Видалення коментаря", true).Show();

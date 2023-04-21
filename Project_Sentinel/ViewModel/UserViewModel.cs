@@ -107,6 +107,20 @@ namespace Project_Sentinel.ViewModel
             {
                 if (obj is UserDTO user)
                 {
+                    var isUserPresent = false;
+                    var allUsers = App.DBProvider.databaseContext.UserRepository.GetAll().ToList();
+                    foreach (var record in App.DBProvider.databaseContext.RecordRepository.GetAll())
+                    {
+                        if (allUsers.ToList().Exists(x => x.Id == record.User.Id))
+                        {
+                            isUserPresent = true;
+                        }
+                    }
+                    if (isUserPresent)
+                    {
+                        new OkCancelNotification($"Користувач пов'язаний з записом, видалість запис якщо потрібно видалити користувача !", "Видалення користувача", false).Show();
+                        return;
+                    }
                     App.DBProvider.databaseContext.UserRepository.Delete(user);
                     Users.Remove(user);
                     new OkCancelNotification("Виконано успішно!", "Видалення користувача", true).Show();

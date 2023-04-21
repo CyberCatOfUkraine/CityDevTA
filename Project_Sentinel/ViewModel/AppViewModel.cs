@@ -106,6 +106,20 @@ namespace Project_Sentinel.ViewModel
             {
                 if (obj is AppDTO app)
                 {
+                    var isAppPresent = false;
+                    var allApps = App.DBProvider.databaseContext.AppRepository.GetAll().ToList();
+                    foreach (var record in App.DBProvider.databaseContext.RecordRepository.GetAll())
+                    {
+                        if (allApps.ToList().Exists(x => x.Id == record.App.Id))
+                        {
+                            isAppPresent = true;
+                        }
+                    }
+                    if (isAppPresent)
+                    {
+                        new OkCancelNotification($"Програма пов'язана з записом, видалість запис якщо потрібно видалити програму !", "Видалення програми", false).Show();
+                        return;
+                    }
                     App.DBProvider.databaseContext.AppRepository.Delete(app);
                     Apps.Remove(app);
                     new OkCancelNotification("Виконано успішно!", "Видалення програми", true).Show();
