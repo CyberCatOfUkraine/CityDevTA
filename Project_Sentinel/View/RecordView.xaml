@@ -7,12 +7,14 @@
              xmlns:vm="clr-namespace:Project_Sentinel.ViewModel"
              xmlns:btn="clr-namespace:Project_Sentinel.UICustomItem.Button"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
+
+             d:DesignHeight="450" d:DesignWidth="800" d:Background="#f8f8f2">
+
     <UserControl.DataContext>
         <vm:RecordViewModel />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <vm:MainWindowViewModel x:Key="RecordVM" />
+        <vm:AppViewModel x:Key="RecordVM" />
         <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -135,13 +137,16 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Column="0" Text="Name" />
-                    <TextBlock Grid.Column="1" Text="Comment" />
-                    <TextBlock Grid.Column="2" Text="Username" />
+                    <TextBlock Grid.Column="0" Text="Id" />
+                    <TextBlock Grid.Column="1" Text="Назва програми" />
+                    <TextBlock Grid.Column="2" Text="Ім'я користувача" />
+                    <TextBlock Grid.Column="3" Text="Коментар" />
+                    <TextBlock Grid.Column="4" Text="Дата коментаря" />
                 </Grid>
             </Border>
         </Grid>
-        <ListView Grid.Row="1" Name="DataGridView" BorderThickness="0" Background="#f8f8f2">
+        <!--////////////////////////////////////////////-->
+        <ListView Grid.Row="1" Name="DataGridView" BorderThickness="0" Background="#f8f8f2" ItemsSource="{Binding Records}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="BorderBrush" Value="#bd93f9" />
@@ -196,24 +201,32 @@
                                 <ColumnDefinition Width="150" MaxWidth="150" />
                                 <ColumnDefinition Width="150" MaxWidth="150" />
                                 <ColumnDefinition Width="150" MaxWidth="150" />
+                                <ColumnDefinition Width="150" MaxWidth="150" />
+                                <ColumnDefinition Width="150" MaxWidth="150" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" />
-                            <TextBlock Grid.Column="1" Text="{Binding Comment}" />
-                            <TextBlock Grid.Column="2" Text="{Binding Username}" />
-                            <btn:OrdinaryButton Grid.Column="3"  BtnOCaption="Редагувати" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="4"  BtnOCommand="{Binding ShowTestMessageCommand, Source={StaticResource RecordVM}}" />
-                            <btn:OrdinaryButton Grid.Column="4"  BtnOCaption="Видалити" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="4"  BtnOCommand="{Binding ShowTestMessageCommand, Source={StaticResource RecordVM}}" />
+                            <TextBlock Grid.Column="0" Text="{Binding  Id}" />
+                            <TextBlock Grid.Column="1" Text="{Binding  App.Name}" />
+                            <TextBlock Grid.Column="2" Text="{Binding  User.Name}" />
+                            <TextBlock Grid.Column="3" Text="{Binding  Comment.Text}" />
+                            <TextBlock Grid.Column="4" Text="{Binding  Comment.TimeStamp, StringFormat={}{0:dd-MM-yyyy HH:mm:ss}}" />
+                            <btn:OrdinaryButton Grid.Column="5"  BtnOCaption="Редагувати" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="4"
+                                                BtnOCommand="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                BtnOCommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}" />
+                            <btn:OrdinaryButton Grid.Column="6"  BtnOCaption="Видалити" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="4"
+                                                BtnOCommand="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                                BtnOCommandParameter="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}" />
                         </Grid>
                     </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
         <Grid Grid.Row="2" Background="#f8f8f2">
-            <btn:OrdinaryButton  BtnOCaption="Додати" MinWidth="200" HorizontalAlignment="Center" Padding="4" BtnOCommand="{Binding DataContext.ShowTestMessageCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+            <btn:OrdinaryButton  BtnOCaption="Додати" MinWidth="200" HorizontalAlignment="Center" Padding="4" BtnOCommand="{Binding DataContext.AddCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
         </Grid>
     </Grid>
 </UserControl>

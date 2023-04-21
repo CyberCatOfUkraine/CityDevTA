@@ -5,24 +5,25 @@ namespace Middleware.DBProvider.Test
 {
     public class FakeDatabaseContext : IDatabaseContext
     {
-        public IDatabaseRepository<AppDTO> AppRepository => new FakeRepository<AppDTO>();
+        public IDatabaseRepository<AppDTO> AppRepository => new FakeRepository<AppDTO>(this);
 
-        public IDatabaseRepository<UserDTO> UserRepository => new FakeRepository<UserDTO>();
+        public IDatabaseRepository<UserDTO> UserRepository => new FakeRepository<UserDTO>(this);
 
-        public IDatabaseRepository<CommentDTO> CommentRepository => new FakeRepository<CommentDTO>();
+        public IDatabaseRepository<CommentDTO> CommentRepository => new FakeRepository<CommentDTO>(this);
 
-        public IDatabaseRepository<RecordDTO> RecordRepository => new FakeRepository<RecordDTO>();
+        public IDatabaseRepository<RecordDTO> RecordRepository => new FakeRepository<RecordDTO>(this);
 
         private class FakeRepository<T> : IDatabaseRepository<T> where T : class
         {
             private static FakeRepository<T> _FakeRepository;
             private static List<T> list = new();
 
-            private static FakeRepository<T> GetInstance()
+            public FakeRepository(FakeDatabaseContext context)
             {
-                _FakeRepository ??= new();
-                return _FakeRepository;
+                _context = context;
             }
+
+            public FakeDatabaseContext _context { get; }
 
             public void Add(T entity)
             {
@@ -45,6 +46,13 @@ namespace Middleware.DBProvider.Test
 
             public void Delete(T entity)
             {
+                if (entity is RecordDTO)
+                {
+                    var record = entity as RecordDTO;
+                    _context.AppRepository.Delete(record.App);
+                    _context.UserRepository.Delete(record.User);
+                    _context.CommentRepository.Delete(record.Comment);
+                }
                 list.Remove(entity);
             }
 
@@ -75,8 +83,16 @@ namespace Middleware.DBProvider.Test
                     return (typeof(T)!.GetProperty("Id") != null && y.Id == id) || (typeof(T)!.GetProperty("id") != null && y.id == id);
                 });
             }
+
             public void Update(T entity)
             {
+                if (entity is RecordDTO)
+                {
+                    var record = entity as RecordDTO;
+                    _context.AppRepository.Update(record.App);
+                    _context.UserRepository.Update(record.User);
+                    _context.CommentRepository.Update(record.Comment);
+                }
                 if (entity.GetType().GetProperty("Id") != null)
                 {
                     var members = entity.GetType().GetMembers()
