@@ -66,9 +66,51 @@ namespace Project_Sentinel.ViewModel
 
                 var allRecords = App.DBProvider.databaseContext.RecordRepository.GetAll();
 
-                var allApps = App.DBProvider.databaseContext.AppRepository.GetAll().Except(allRecords.Select(x => x.App));
-                var allUsers = App.DBProvider.databaseContext.UserRepository.GetAll().Except(allRecords.Select(x => x.User));
-                var allComments = App.DBProvider.databaseContext.CommentRepository.GetAll().Except(allRecords.Select(x => x.Comment));
+                var allRecordsApps = allRecords.Select(x => x.App);
+                var allRecordsUsers = allRecords.Select(x => x.User);
+                var allRecordsComments = allRecords.Select(x => x.Comment);
+
+                var delAllApps = delegate ()
+                {
+                    var list = new List<AppDTO>();
+                    foreach (var item in App.DBProvider.databaseContext.AppRepository.GetAll())
+                    {
+                        if (allRecordsApps.FirstOrDefault(x => x.Id == item.Id) == null)
+                        {
+                            list.Add(item);
+                        }
+                    }
+                    return list;
+                };
+                var delAllUsers = delegate ()
+                {
+                    var list = new List<UserDTO>();
+                    foreach (var item in App.DBProvider.databaseContext.UserRepository.GetAll())
+                    {
+                        if (allRecordsUsers.FirstOrDefault(x => x.Id == item.Id) == null)
+                        {
+                            list.Add(item);
+                        }
+                    }
+                    return list;
+                };
+                var delAllComments = delegate ()
+                {
+                    var list = new List<CommentDTO>();
+                    foreach (var item in App.DBProvider.databaseContext.CommentRepository.GetAll())
+                    {
+                        if (allRecordsComments.FirstOrDefault(x => x.Id == item.Id) == null)
+                        {
+                            list.Add(item);
+                        }
+                    }
+                    return list;
+                };
+                var allApps = delAllApps.Invoke();
+
+                var allUsers = delAllUsers.Invoke();
+
+                var allComments = delAllComments.Invoke();
                 var addRecordWindow = new AddRecordWindow(addCommand, allApps, allUsers, allComments);
                 addRecordWindow.ShowDialog();
                 if (addRecordWindow.CurrentRecord != null)
@@ -89,13 +131,58 @@ namespace Project_Sentinel.ViewModel
             {
                 if (obj is RecordDTO record)
                 {
-                    var allApps = App.DBProvider.databaseContext.AppRepository.GetAll();
-                    var allUsers = App.DBProvider.databaseContext.UserRepository.GetAll();
-                    var allComments = App.DBProvider.databaseContext.CommentRepository.GetAll();
+                    var allRecords = App.DBProvider.databaseContext.RecordRepository.GetAll();
+
+                    var allRecordsApps = allRecords.Select(x => x.App);
+                    var allRecordsUsers = allRecords.Select(x => x.User);
+                    var allRecordsComments = allRecords.Select(x => x.Comment);
+
+                    var delAllApps = delegate ()
+                    {
+                        var list = new List<AppDTO>();
+                        foreach (var item in App.DBProvider.databaseContext.AppRepository.GetAll())
+                        {
+                            if (allRecordsApps.FirstOrDefault(x => x.Id == item.Id) == null)
+                            {
+                                list.Add(item);
+                            }
+                        }
+                        return list;
+                    };
+                    var delAllUsers = delegate ()
+                    {
+                        var list = new List<UserDTO>();
+                        foreach (var item in App.DBProvider.databaseContext.UserRepository.GetAll())
+                        {
+                            if (allRecordsUsers.FirstOrDefault(x => x.Id == item.Id) == null)
+                            {
+                                list.Add(item);
+                            }
+                        }
+                        return list;
+                    };
+                    var delAllComments = delegate ()
+                    {
+                        var list = new List<CommentDTO>();
+                        foreach (var item in App.DBProvider.databaseContext.CommentRepository.GetAll())
+                        {
+                            if (allRecordsComments.FirstOrDefault(x => x.Id == item.Id) == null)
+                            {
+                                list.Add(item);
+                            }
+                        }
+                        return list;
+                    };
+                    var allApps = delAllApps.Invoke();
+
+                    var allUsers = delAllUsers.Invoke();
+
+                    var allComments = delAllComments.Invoke();
+
                     EditRecordWindow window = new EditRecordWindow(App.DBProvider.databaseContext.RecordRepository.Update, allApps, allUsers, allComments, record);
                     window.ShowDialog();
-                    var modifiedRecord = window.CurrentRecord;
-                    if (modifiedRecord != record)
+                    var selected = window.IsSelected;
+                    if (selected)
                     {
                         new OkCancelNotification("Виконано успішно!", "Редагування запису", true).Show();
                     }

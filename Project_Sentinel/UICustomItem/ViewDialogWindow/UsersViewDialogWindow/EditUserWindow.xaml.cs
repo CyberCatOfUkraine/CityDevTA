@@ -51,7 +51,7 @@ namespace Project_Sentinel.UICustomItem.ViewDialogWindow.UsersViewDialogWindow
 
         private void EditApp()
         {
-            CurrentUser = new UserDTO(UserNameTextBox.Text);
+            CurrentUser.Name = UserNameTextBox.Text;
             editAction.Invoke(CurrentUser);
             Instance.Close();
         }

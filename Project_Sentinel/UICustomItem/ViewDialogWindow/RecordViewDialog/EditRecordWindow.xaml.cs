@@ -84,6 +84,8 @@ namespace Project_Sentinel.UICustomItem.ViewDialogWindow.RecordViewDialog
             set { SetValue(SelectedCommentProperty, value); }
         }
 
+        public bool IsSelected { get; set; }
+
         private void EditRecord()
         {
             if (CurrentApp == null)
@@ -112,6 +114,7 @@ namespace Project_Sentinel.UICustomItem.ViewDialogWindow.RecordViewDialog
                 CurrentRecord.User = CurrentUser;
                 CurrentRecord.Comment = CurrentComment;
                 editAction.Invoke(CurrentRecord);
+                IsSelected = true;
                 Instance.Close();
             }
         }

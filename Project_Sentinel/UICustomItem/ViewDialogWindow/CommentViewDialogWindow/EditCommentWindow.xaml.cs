@@ -22,12 +22,12 @@ namespace Project_Sentinel.UICustomItem.ViewDialogWindow.CommentViewDialogWindow
     /// </summary>
     public partial class EditCommentWindow : Window
     {
-        public EditCommentWindow(CommentDTO user, Action<CommentDTO> editAction)
+        public EditCommentWindow(CommentDTO comment, Action<CommentDTO> editAction)
         {
             Instance = this;
             DataContext = this;
             this.editAction = editAction;
-            CurrentComment = user;
+            CurrentComment = comment;
             InitializeComponent();
         }
 
@@ -50,7 +50,8 @@ namespace Project_Sentinel.UICustomItem.ViewDialogWindow.CommentViewDialogWindow
 
         private void EditApp()
         {
-            CurrentComment = new CommentDTO(CommentTextBox.Text, DateTime.Now);
+            CurrentComment.Text = CommentTextBox.Text;
+            CurrentComment.TimeStamp = DateTime.Now;
             editAction.Invoke(CurrentComment);
             Instance.Close();
         }

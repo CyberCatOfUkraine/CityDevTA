@@ -29,7 +29,7 @@ namespace Project_Sentinel
                 {
                     SQLiteDBProvider ??= new SQLiteDBProvider(successDbCreatedCallback);
 
-                    IDBProvider dbProvider = FakeDbProvider;
+                    IDBProvider dbProvider = SQLiteDBProvider;
                     return dbProvider;
                 }
                 catch (Exception e)

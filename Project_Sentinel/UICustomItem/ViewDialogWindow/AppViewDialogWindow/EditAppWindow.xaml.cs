@@ -51,7 +51,7 @@ namespace Project_Sentinel.UICustomItem.ViewDialogWindow.AppViewDialogWindow
 
         private void EditApp()
         {
-            CurrentApp = new AppDTO(AppNameTextBox.Text);
+            CurrentApp.Name= AppNameTextBox.Text;
             editAction.Invoke(CurrentApp);
             Instance.Close();
         }
