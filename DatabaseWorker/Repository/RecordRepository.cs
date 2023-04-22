@@ -30,15 +30,15 @@ namespace DatabaseWorker.Repository
 
         public void Delete(Record entity)
         {
-            if (new AppRepository().Exists(entity.App.Id))
+            if (new AppRepository().GetById(entity.App.Id) != null)
             {
                 new AppRepository().Delete(entity.App);
             }
-            if (new UserRepository().Exists(entity.User.Id))
+            if (new UserRepository().GetById(entity.User.Id) != null)
             {
                 new UserRepository().Delete(entity.User);
             }
-            if (new CommentRepository().Exists(entity.Comment.Id))
+            if (new CommentRepository().GetById(entity.Comment.Id) != null)
             {
                 new CommentRepository().Delete(entity.Comment);
             }
